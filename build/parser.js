@@ -718,9 +718,9 @@ case 10: return 29
 break;
 case 11: return 30 
 break;
-case 12: return 31 
+case 12: yy_.yytext = yy_.yytext.slice(2); return 31 
 break;
-case 13: return 32 
+case 13: yy_.yytext = yy_.yytext.slice(2); return 32 
 break;
 case 14: yy_.yytext = yy_.yytext.toUpperCase(); return 5 
 break;

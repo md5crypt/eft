@@ -41,9 +41,9 @@ if|then|elseif|else|true|false
 [0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?
 	{ return 'NUMBER' }
 0[Xx][0-9a-fA-F]+
-	{ return 'HEXNUMBER' }
+	{ yytext = yytext.slice(2); return 'HEXNUMBER' }
 0[bB][01]+
-	{ return 'BINNUMBER' }
+	{ yytext = yytext.slice(2); return 'BINNUMBER' }
 [a-zA-Z\u0100-\uffff][a-zA-Z0-9.\u0100-\uffff]*
 	{ yytext = yytext.toUpperCase(); return 'NAME' }
 .
