@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<style>
+		body{
+			padding: 0px;
+			margin: 0px;
+			background-color: lightgray;
+		}
+		hr{
+			margin: 8px 0px;
+		}
+		.banner{
+			background-color: white;
+			font-size: 18px;
+			font-family: Monospace;
+			font-weight: bold;
+			line-height: 40px;
+			text-align: center;
+			width: 80%;
+			margin: 0px auto;
+			height: 40px;
+		}
+		.inputbox{
+			width: 80%;
+			margin: 0px auto;
+			height: calc(100vh - 116px);
+		}
+		.label{
+			height: 30px;
+			line-height: 30px;
+			padding: 0px;
+			margin: 0px;
+			padding-left: 10px;
+			background-color: lightgray;
+			font-size: 16px;
+			font-family: Monospace;
+			font-weight: bold;
+		}
+		#input{
+			box-sizing: border-box;
+			width: 100%;
+			height: calc(100% - 30px);
+			padding: 2px;
+		}
+		.outputbox{
+			width: 80%;
+			margin: 0px auto;
+			height: calc(70vh - 18px);
+		}
+		.outputbox code{
+			box-sizing: border-box;
+			width: 100%;
+			height: calc(100% - 40px);
+			background-color: white;
+			display: block;
+			border: 1px solid #A9A9A9;
+			margin-bottom: 10px;
+			white-space: pre-wrap;
+			overflow-wrap: break-word;
+			padding: 2px;
+			overflow-y: auto;
+		}
+		.optbox{
+			width: 80%;
+			margin: 0px auto;
+			height: 64px;
+		}
+		.optbox table{
+			margin-top: 5px;
+			width: 100%;
+			text-align: center;
+		}
+		.optbox button{
+			display: block;
+			box-sizing: border-box;
+			height: 30px;
+			margin: 5px 0px;
+			width: 100%;
+			background-color: white;
+			font-size: 16px;
+			font-family: Monospace;
+			font-weight: bold;
+		}
+	</style>
+	<script type="text/javascript" src="build/parser.js"></script>
+	<script type="text/javascript" src="build/functions.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/ace/1.2.3/noconflict/ace.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/ace/1.2.3/noconflict/theme-clouds.js"></script>
+</head>
+<body>
+<script>
+var currentLang = 0
+var reverseLut = []
+functions.data.forEach(function(data){
+	var o = {}
+	data.forEach(function(x,i){o[x] = i})
+	reverseLut.push(o)
+})
+ace.define("ace/mode/eft",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/text_highlight_rules"], function(require, exports, module) {
+	var oop = require("../lib/oop");
+	var EftHighlightRules = function() {
+		this.$rules = {
+		   'start':	[
+				{ token: 'comment.block', regex: '\\/\\*', push: 'comment' },
+				{ token: 'comment.line', regex: '\/\/[^\\n]*'},
+				{ token: 'keyword.operator', regex: '[&!><=+%/*^()\\-]'},
+				{ token: 'constant.numeric', regex: '(?:(?:0[xXbB][0-9a-fA-F]+)|(?:[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?)|true|false)\\b' },
+				{ token: 'keyword.control', regex: '(?:if|elseif|else|then)\\b'},
+				{ token: 'string.quoted', regex: '"(?:\\\\.|[^\\\\\"])*"' },
+				{ token: 'support.other', regex: '(?:\'[^\\\']+\'!|\\[[^\\]]+\\][^!]+!)?\\$?[A-Za-z]+\\$?\\d+(?::\\$?[A-Za-z]+\\$?\\d+)?\\b' },
+				{ token: function(a){
+					return reverseLut[0].hasOwnProperty(a.toUpperCase())||reverseLut[currentLang].hasOwnProperty(a.toUpperCase())?'support.constant.property-value':'entity.other'
+				}, regex: '[a-zA-Z][a-zA-Z0-9.]*\\b'},
+			],'comment':[
+				{ token: 'comment.block', regex: '\\/\\*', push: 'comment' },
+				{ token: 'comment.block', regex: '\\*\\/', next: 'pop' },
+				{ token: 'comment.block', regex: '[^*\\/]+' },
+				{ token: 'comment.block', regex: '.' }
+			]
+		}
+		this.normalizeRules()
+	}
+	EftHighlightRules.metaData = {
+		fileTypes: [ 'eft' ],
+		name: 'Excel formula transpiler',
+		scopeName: 'source.eft'
+	}
+	oop.inherits(EftHighlightRules, require("./text_highlight_rules").TextHighlightRules)
+	var Mode = function(){
+	    this.HighlightRules = EftHighlightRules
+	}
+	oop.inherits(Mode, require("./text").Mode)
+	exports.Mode = Mode
+});
+function genarate(input,lang,dot,comma){
+	function recurance(node){
+		if(node.type == 'call'){
+			var f = node.function
+			if(reverseLut[0].hasOwnProperty(f)){
+				f = functions.data[lang][reverseLut[0][f]]
+			}else if(!reverseLut[lang].hasOwnProperty(f)){
+				throw new Error('unknown excel function "'+f+'"')
+			}
+			return f+'(' + node.arguments.map(recurance).join(comma) + ')'
+		}else if(node.type == 'operator'){
+			return (node.left?recurance(node.left):'')+node.operator+recurance(node.right)
+		}else if(node.type == 'number'){
+			return (''+node.value).replace(/\./g,dot)
+		}else if(node.type == 'string'){
+			return '"'+node.value+'"'
+		}else{
+			return node.value
+		}
+	}
+	return '='+recurance(input)
+}
+$(function(){
+	$('#lang').html(functions.metadata.map(function(x,i){return '<option value="'+i+'">'+x+'</option>'}).join(''))
+	$('#lang').change(function(){
+		currentLang = $(this).val()|0
+		editor.getSession().setValue(editor.getSession().getValue())
+	})
+	var editor = ace.edit("input")
+	editor.$blockScrolling = Infinity
+	editor.setTheme("ace/theme/clouds")
+	editor.getSession().setMode("ace/mode/eft")
+	editor.setShowFoldWidgets(false)
+	editor.setDisplayIndentGuides(true)
+	editor.renderer.setShowPrintMargin(false)
+	editor.setHighlightSelectedWord(true)
+	editor.setAnimatedScroll(true)
+	editor.setShowFoldWidgets(false)
+	editor.getSession().setValue('if c1 >= 12.3 && c1 < 12.8 then "level1"\nelseif c1 == 18 || d1 == 12 then "level2"\nelse "whatever" & (sum(c1:e1)*12.2)')
+	$('#btn').on('click',function(){
+		var dot = $('#dpoint').val()
+		var comma = $('#lsep').val()
+		var output = null
+		try{
+			output = genarate(parser.parse(editor.getSession().getValue()),currentLang,dot,comma)
+		}catch(e){
+			output = e.message
+		}
+		$('#output').html(output)
+		window.scrollTo(0,document.body.scrollHeight)
+	})
+});
+</script>
+<div id="content">
+	<div class="banner">Excel formula transpiler</div>
+	<div class="inputbox">
+		<p class="label">Input:</p>
+		<div id="input"></div>
+	</div>
+	<div class="optbox">
+		<table><tr>
+		<td><label>language:&nbsp;<select id="lang"><option>English</option></select></label></td>
+		<td><label>decimal point:&nbsp;<input id="dpoint" value="." style="width:16px"/></label></td>
+		<td><label>list separator:&nbsp;<input id="lsep" value="," style="width:16px"/></label></td>
+		</tr></table>
+		<button id="btn">Transpile formula</button>
+	</div>
+	<hr/>
+	<div class="outputbox">
+		<p class="label">Output:</p>
+		<code id="output"></code>
+	</div>
+</div>
+</body>
+</html>

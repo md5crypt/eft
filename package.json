@@ -1,0 +1,14 @@
+{
+  "name": "eft",
+  "version": "1.0.0",
+  "description": "Excel formula transpiler",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"build": "jison parser.jison -o build/parser.js -p slr -m js && node scripts/convert.js"
+  },
+  "author": "Marek Korzeniowski",
+  "license": "MIT",
+  "devDependencies": {
+    "jison": "^0.4.18"
+  }
+}
