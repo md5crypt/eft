@@ -3,6 +3,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Excel formula transpiler</title>
 	<meta charset="UTF-8"/>
 	<style>
 		body{
@@ -108,14 +110,14 @@ ace.define("ace/mode/eft",["require","exports","module","ace/lib/oop","ace/mode/
 		   'start':	[
 				{ token: 'comment.block', regex: '\\/\\*', push: 'comment' },
 				{ token: 'comment.line', regex: '\/\/[^\\n]*'},
-				{ token: 'keyword.operator', regex: '[&!><=+%/*^()\\-]'},
+				{ token: 'keyword.operator', regex: '[&!><=+%/*^()\\-,]'},
 				{ token: 'constant.numeric', regex: '(?:(?:0[xXbB][0-9a-fA-F]+)|(?:[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?)|true|false)\\b' },
 				{ token: 'keyword.control', regex: '(?:if|elseif|else|then)\\b'},
 				{ token: 'string.quoted', regex: '"(?:\\\\.|[^\\\\\"])*"' },
 				{ token: 'support.other', regex: '(?:\'[^\\\']+\'!|\\[[^\\]]+\\][^!]+!)?\\$?[A-Za-z]+\\$?\\d+(?::\\$?[A-Za-z]+\\$?\\d+)?\\b' },
 				{ token: function(a){
-					return reverseLut[0].hasOwnProperty(a.toUpperCase())||reverseLut[currentLang].hasOwnProperty(a.toUpperCase())?'support.constant.property-value':'entity.other'
-				}, regex: '[a-zA-Z][a-zA-Z0-9.]*\\b'},
+					return reverseLut[0].hasOwnProperty(a.toUpperCase())||reverseLut[currentLang].hasOwnProperty(a.toUpperCase())?'constant.character.entity':'entity.other'
+				}, regex: '[a-zA-Z\\u0100-\\uffff][a-zA-Z0-9.\\u0100-\\uffff]*'},
 			],'comment':[
 				{ token: 'comment.block', regex: '\\/\\*', push: 'comment' },
 				{ token: 'comment.block', regex: '\\*\\/', next: 'pop' },
@@ -175,6 +177,7 @@ $(function(){
 	editor.setHighlightSelectedWord(true)
 	editor.setAnimatedScroll(true)
 	editor.setShowFoldWidgets(false)
+	editor.setFontSize(13)
 	editor.getSession().setValue('if c1 >= 12.3 && c1 < 12.8 then "level1"\nelseif c1 == 18 || d1 == 12 then "level2"\nelse "whatever" & (sum(c1:e1)*12.2)')
 	$('#btn').on('click',function(){
 		var dot = $('#dpoint').val()

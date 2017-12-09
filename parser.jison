@@ -44,7 +44,7 @@ if|then|elseif|else|true|false
 	{ return 'HEXNUMBER' }
 0[bB][01]+
 	{ return 'BINNUMBER' }
-[a-zA-Z][a-zA-Z0-9.]*
+[a-zA-Z\u0100-\uffff][a-zA-Z0-9.\u0100-\uffff]*
 	{ yytext = yytext.toUpperCase(); return 'NAME' }
 .
 	{ return 'INVALID_TOKEN' }
