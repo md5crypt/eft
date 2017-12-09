@@ -2,7 +2,7 @@
 
 ### [>> open transpiler <<](https://md5crypt.github.io/eft/)
 
-A little tool I glued together after getting frustrated with excel. Allows to write a formulas with if-elseif-else blocks and operators that for some reason where not included in excel's grammar (like `&&` or `||`) and then transpile them to a standard excel formula. As a bonus the tool translates function names to the target language and allows setting decimal point and list separator characters.
+A little tool I glued together after getting frustrated with excel. Allows writing excel formulas with if-elseif-else blocks and operators that for some reason where not included in excel's grammar (like `&&` or `||`). As output it spits out standard excel formulas (hence 'transpiler'). As a bonus the tool translates function names to the target language and allows setting decimal point and list separator characters (which is always a gaint pain in the ass if your native language is not English).
 
 Oh, and the editor uses the awesome ACE editor with a custom syntax highlighter to make life easier.
 
@@ -11,7 +11,7 @@ Oh, and the editor uses the awesome ACE editor with a custom syntax highlighter 
 * `if` *expression* `then` *expression* `else` *expression*
 * `if` *expression* `then` *expression* `elseif` *expression* `then` *[...]*
 
-If-blocks can be enclosed in braces as any other expressions
+If-blocks can be enclosed in braces like any other expressions
 
 ## Constants
 * normal numbers: `1234.12`
@@ -44,7 +44,7 @@ Arguments have to be separated with a comma, but the output list separator can b
 * modulo: `%`
 * negation: `!`
 
-Bitwise or, and, and xor when not added as the standard symbols where already taken. Use excel functions.
+Bitwise or, and, and xor where not added as the standard symbols where already taken.
 
 ## Standard excel operators
 * standard arithmetic: `+`, `-`, `/`, `*`
@@ -52,3 +52,7 @@ Bitwise or, and, and xor when not added as the standard symbols where already ta
 * string concatenation: `&`
 * standard inequalities: `<`, `<=`, `>=`, `>`
 * unary minus: `-`
+
+## Building
+* `npm install`
+* `npm run build`
