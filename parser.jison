@@ -14,7 +14,7 @@
 	/* eat whitespace */
 \/\/[^\n]*
 	/* eat comments */
-'*/'
+'/*'
 	{ this.begin('comment') }
 '||'|'&&'|'=='|'!='|'<='|'>='|'>>'|'<<'|[,&!><=+%/*^()\-]
 	{ return yytext }

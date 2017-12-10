@@ -178,7 +178,7 @@ $(function(){
 	editor.setAnimatedScroll(true)
 	editor.setShowFoldWidgets(false)
 	editor.setFontSize(13)
-	editor.getSession().setValue('if c1 >= 12.3 && c1 < 12.8 then "level1"\nelseif c1 == 18 || d1 == 12 then "level2"\nelse "whatever" & (sum(c1:e1)*12.2)')
+	editor.getSession().setValue('// this is an example input\nif  (f2=="bk" && e2<5) ||\n    (f2=="k" && e2<4.9) ||\n    (f2=="lk" && e2<4.7) ||\n    ((f2=="o" || f2=="z") && e2<2.7)\nthen "bn" elseif\n    (f2=="bk" && e2<11) ||\n    (f2=="k" && e2<10.3) ||\n    (f2=="lk" && e2<9.9) ||\n    ((f2=="o" || f2=="z") && e2<5.4)\nthen "n" elseif\n    (f2=="bk" && e2<18.6) ||\n    (f2=="k" && e2<15.8) ||\n    (f2=="lk" && e2<15.2) ||\n    ((f2=="o" || f2=="z") && e2<7.5)\nthen "s" elseif\n    (f2=="bk" && e2<26.2) ||\n    (f2=="k" && e2<21.5) ||\n    (f2=="lk" && e2<20.7) ||\n    ((f2=="o" || f2=="z") && e2<9.9)\nthen "w" else "bw"\n/* block comments work too */')
 	$('#btn').on('click',function(){
 		var dot = $('#dpoint').val()
 		var comma = $('#lsep').val()

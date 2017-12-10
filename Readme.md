@@ -18,7 +18,7 @@ If-blocks can be enclosed in braces like any other expressions
 * scientific numbers: `12e12`
 * hexadecimal numbers: `0x1234`
 * binary numbers: `0b10101`
-* strings: `"yo!"` (supported escape sequences `\\`, `\"`, `\n`, `\r`, `\t`, `xhh` and `\uhhhh`)
+* strings: `"yo!"` (supported escape sequences `\\`, `\"`, `\n`, `\r`, `\t`, `\xhh` and `\uhhhh`)
 * boolean values: `true` and `false`
 
 Decimal point has to be a dot, but output decimal point can be set to any character
@@ -33,6 +33,9 @@ Decimal point has to be a dot, but output decimal point can be set to any charac
 * Chosen language names `usuń.zbędne.odstępy(c1)`
 
 Arguments have to be separated with a comma, but the output list separator can be set to any character. English names get translated when necessary.
+
+## Comments
+Standard line commnents `//` and block comments `/* */` are supported.
 
 ## Added or changed operators
 * logical or: `||`
