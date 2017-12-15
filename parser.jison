@@ -21,7 +21,7 @@
 if|then|elseif|else|true|false
 	{ return yytext.toUpperCase() }
 ["](?:\\.|[^\\"])*["] {
-	yytext = yytext.slice(1,-1).replace(/\\([nrt"\\]|x[a-fA-F0-9]{2}|u[a-fA-F0-9]{4})/g,(m,g)=>{
+	yytext = yytext.slice(1,-1).replace(/\\([nrt"\\]|x[a-fA-F0-9]{2}|u[a-fA-F0-9]{4})/g,function(m,g){
 		switch(g[0]){
 			case 'x':
 			case 'u':

@@ -698,7 +698,7 @@ break;
 case 8: return yy_.yytext.toUpperCase() 
 break;
 case 9:
-	yy_.yytext = yy_.yytext.slice(1,-1).replace(/\\([nrt"\\]|x[a-fA-F0-9]{2}|u[a-fA-F0-9]{4})/g,(m,g)=>{
+	yy_.yytext = yy_.yytext.slice(1,-1).replace(/\\([nrt"\\]|x[a-fA-F0-9]{2}|u[a-fA-F0-9]{4})/g,function(m,g){
 		switch(g[0]){
 			case 'x':
 			case 'u':
